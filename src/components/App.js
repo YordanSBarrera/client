@@ -1,28 +1,24 @@
 import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
+import StreamCreate from './streams/StreamCreate'
+import StreamDelete from './streams/StreamDelete'
+import StreamList from './streams/StreamList'
+import StreamEdit from './streams/StreamEdit'
+import StreamShow from './streams/StreamShow'
+import Header from './Header'
 
-const Page1 = () => {
-    return <div>Pagina 1</div>
-}
-const Page2 = () => {
-    return <div>Pagina 2</div>
-}
-const Page3 = () => {
-    return <div>Pagina 3</div>
-}
-const Page4 = () => {
-    return <div>Pagina 4</div>
-}
 
 const App = () => {
     return (
-        <div>
-            <BrowserRouter>
+        <div>          
+            <BrowserRouter>            
                 <div>
-                    <Route path="/" exact component={Page1} />
-                    <Route path="/Page2" component={Page2} />
-                    <Route path="/Page3" component={Page3} />
-                    <Route path="/Page4" component={Page4} />
+                <Header/>
+                    <Route path="/" exact component={StreamList} />
+                    <Route path="/streams/new" component={StreamCreate} />
+                    <Route path="/streams/edit" component={StreamEdit} />
+                    <Route path="/streams/delete" component={StreamDelete} />
+                    <Route path="/streams/show" component={StreamShow} />
                 </div>
             </BrowserRouter>
         </div>
