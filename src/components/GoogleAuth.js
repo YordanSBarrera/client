@@ -9,7 +9,12 @@ class GoogleAuth extends React.Component{
                 scope:'email'
             })
         })
-
+     /*   958107640304-skghhbvovt70r9ul8hfhhlp4eio064ro.apps.googleusercontent.com
+        CLIENT ID
+        
+        lIiLw3gq7fkIj3wo-0EQxojI
+        Client Secret
+        */
     }
 
     render(){
