@@ -1,71 +1,75 @@
-import React from 'react'
+import React from "react";
+import { connect } from "react-redux";
+import { signIn, signOut } from "../actions";
 
 class GoogleAuth extends React.Component {
-    state = { isSignedIn: null }
-
-    componentDidMount() {
-        window.gapi.load('client:auth2', () => {
-            window.gapi.client.init({
-                clientId: '958107640304-skghhbvovt70r9ul8hfhhlp4eio064ro.apps.googleusercontent.com',
-                scope: 'email'
-            }).then(() => {
-                this.auth = window.gapi.auth2.getAuthInstance();
-                this.setState({ isSignedIn: this.auth.isSignedIn.get() })
-                this.auth.isSignedIn.listen(this.onAuthChange);
-            })
+  componentDidMount() {
+    window.gapi.load("client:auth2", () => {
+      window.gapi.client
+        .init({
+          clientId:
+            "958107640304-skghhbvovt70r9ul8hfhhlp4eio064ro.apps.googleusercontent.com",
+          scope: "email",
         })
-        /*   958107640304-skghhbvovt70r9ul8hfhhlp4eio064ro.apps.googleusercontent.com
+        .then(() => {
+          this.auth = window.gapi.auth2.getAuthInstance();
+          //  console.log(this.auth.isSignedIn.get());
+          this.onAuthChange(this.auth.isSignedIn.get());
+          this.auth.isSignedIn.listen(this.onAuthChange);
+        });
+    });
+    /*   958107640304-skghhbvovt70r9ul8hfhhlp4eio064ro.apps.googleusercontent.com
            CLIENT ID
            
            lIiLw3gq7fkIj3wo-0EQxojI
            Client Secret
            */
+  }
+  onAuthChange = (isSignedIn) => {
+    //console.log(isSignedIn);
+    if (isSignedIn) {
+      this.props.signIn();
+    } else {
+      this.props.signOut();
     }
+  };
+  onSignInClick = () => {
+    this.auth.signIn();
+  };
+  onSignOutClick = () => {
+    this.auth.signOut();
+  };
 
-    onSignInClick = () => {
-        this.auth.signIn();
+  renderAuthButton() {
+    //  console.log(this.props);
+    if (this.props.isSignedIn === null) {
+      return null;
     }
-    onSignOutClick = () => {
-        this.auth.signOut();
+    if (this.props.isSignedIn) {
+      return (
+        <button className="ui red google button" onClick={this.onSignOutClick}>
+          <i className="google icon" />
+          Sign Out
+        </button>
+      );
+    } else {
+      return (
+        <button className="ui red google button" onClick={this.onSignInClick}>
+          <i className="google icon" />
+          Sign In with Google
+        </button>
+      );
     }
+  }
 
-    onAuthChange = () => {
-        this.setState({ isSignedIn: this.auth.isSignedIn.get() })
-    }
-    renderAuthButton() {
-        if (this.state.isSignedIn === null) {
-            return null;
-        }
-        if (this.state.isSignedIn) {
-            return (
-                <button 
-                className="ui red google button"
-                onClick={this.onSignOutClick}
-                >
-                    <i className="google icon" />
-                    Sign Out
-                </button>
-            )
-        } else {
-            return (
-                <button 
-                className="ui red google button"
-                onClick={this.onSignInClick}
-                >
-                    <i className="google icon" />
-                    Sign In with Google
-                </button>
-            )
-        }
-    }
+  render() {
+    return <div>{this.renderAuthButton()}</div>;
+  }
+}
 
-    render() {
-        return (
-            <div>
-                {this.renderAuthButton()}
-            </div>
-        )
-    }
+const mapStateToProps = (state) => {
+  //console.log(state.auth);
+  return { isSignedIn: state.auth.isSignedIn };
 };
 
-export default GoogleAuth;
+export default connect(mapStateToProps, { signIn, signOut })(GoogleAuth);
