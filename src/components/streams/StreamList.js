@@ -1,27 +1,28 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchStreams } from "../../actions";
+import { Link } from "react-router-dom";
 
 class StreamList extends React.Component {
   componentDidMount() {
     //console.log(this.props);
     this.props.fetchStreams();
   }
-  renderAdmin() {
-    // if (stream.userId === this.props.currentUserId) {
-    return (
-      <div className="right floated content">
-        <button className="ui button primary">Edit</button>
-        <button className="ui button negative">Eliminar</button>
-      </div>
-    );
-    //  }
+  renderAdmin(stream) {
+    if (stream.userId === this.props.currentUserId) {
+      return (
+        <div className="right floated content">
+          <button className="ui button primary">Edit</button>
+          <button className="ui button negative">Eliminar</button>
+        </div>
+      );
+    }
   }
   renderList() {
     return this.props.streams.map((stream) => {
       return (
         <div key={stream.id} className="item">
-          {this.renderAdmin()}
+          {this.renderAdmin(stream)}
           <i className="large middle alingned icon camera" />
           <div className="content">
             {stream.title}
@@ -31,12 +32,25 @@ class StreamList extends React.Component {
       );
     });
   }
+  renderCreateStream() {
+    console.log(this.props);
+    if (this.props.currentUserId) {
+      return (
+        <div style={{ textAlign: "right" }}>
+          <Link to="/streams/new" className="ui button primary">
+            Create New Stream
+          </Link>
+        </div>
+      );
+    }
+  }
   render() {
     console.log(this.props);
     return (
       <div>
         <h2>Streams</h2>
         <div className="ui celled list">{this.renderList()}</div>
+        <div>{this.renderCreateStream()}</div>
       </div>
     );
   }
