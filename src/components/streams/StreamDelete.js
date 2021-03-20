@@ -3,10 +3,12 @@ import Modal from "../Modal";
 import history from "../../history";
 import { connect } from "react-redux";
 import { deleteStream, fetchStream } from "../../actions";
+import { Link } from "react-router-dom";
 
 class StreamDelete extends React.Component {
   componentDidMount() {
     console.log(this.props);
+    this.props.fetchStream(this.props.match.params.id);
   }
   renderAction() {
     return (
@@ -15,12 +17,13 @@ class StreamDelete extends React.Component {
           className="ui button negative"
           onClick={() => {
             this.onDELETE();
-            history.push("/");
           }}
         >
           DELETE
         </button>
-        <button className="ui button primary">Cancel</button>
+        <Link to="/" className="ui button primary">
+          Cancelar
+        </Link>
       </React.Fragment>
     );
   }
@@ -28,9 +31,13 @@ class StreamDelete extends React.Component {
     this.props.deleteStream(this.props.id);
   }
   renderContent() {
+    if (!this.props.stream) {
+      console.log("mensaje de DELETE.");
+      return "REALLY DELETE...???";
+    }
     return (
       <div>
-        Are you really Delete this Post with:
+        Are you really want to Delete this Post with:
         <br />
         title: {this.props.stream.title}
         <br />
@@ -39,19 +46,22 @@ class StreamDelete extends React.Component {
     );
   }
   render() {
+    if (!this.props.stream) {
+      console.log(this.props.stream, "Cargando.....");
+      return <div>Cargando...</div>;
+    }
     return (
-      <div>
-        <Modal
-          title="Stream Delete"
-          content={this.renderContent()}
-          action={this.renderAction()}
-          onDismiss={() => history.push("/")}
-        />
-      </div>
+      <Modal
+        title="Stream Delete"
+        content={this.renderContent()}
+        action={this.renderAction()}
+        onDismiss={() => history.push("/")}
+      />
     );
   }
 }
 const mapStateToProps = (state, ownProps) => {
+  console.log(ownProps.match.params.id, " id en Mapstate");
   return {
     stream: state.streams[ownProps.match.params.id],
     id: ownProps.match.params.id,
