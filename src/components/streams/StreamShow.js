@@ -1,20 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchStream } from "../../actions/index";
+import flv from "flv.js";
+
 class StreamShow extends React.Component {
   componentDidMount() {
-    console.log(this.props);
     this.props.fetchStream(this.props.match.params.id);
-    console.log(this.props.fetchStream(this.props.match.params.id));
   }
   render() {
     if (!this.props.stream) {
       return <div>Cargando....</div>;
     }
-    console.log(this.props.stream);
     const { title, description } = this.props.stream;
     return (
       <div>
+        <video />
         <h1>{title}</h1>
         <h5>{description}</h5>
       </div>
@@ -22,7 +22,6 @@ class StreamShow extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
   return { stream: state.streams[ownProps.match.params.id] };
 };
 export default connect(mapStateToProps, { fetchStream })(StreamShow);
