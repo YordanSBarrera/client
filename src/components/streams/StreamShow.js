@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchStream } from "../../actions/index";
-import flv from "flv.js";
+//import flv from "flv.js";
 
 class StreamShow extends React.Component {
   componentDidMount() {
